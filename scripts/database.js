@@ -36,7 +36,7 @@ const database = {
     ],
 
     orderBuilder: {
-
+       
     },
 }
 
@@ -66,4 +66,30 @@ export const setSize = (id) => {
 
 export const setStyle = (id) => {
     database.orderBuilder.styleId = id
+}
+
+// defining a function whos job is to add new objects
+// to the orderbuilder object in the database
+
+export const addCustomOrder = () => {
+    // copy the current state of user choices
+    const newOrder = {...database.orderBuilder}
+
+    // add new primary key to the object
+    const lastIndex = database.customOrders.length - 1
+    newOrder.id = database.customOrders[lastIndex].id + 1
+
+    // add a tiimestamp to the order
+    newOrder.timestamp = Date.now()
+
+    // add the new order object to custom orders state
+    database.customOrders.push(newOrder)
+
+    // reset the temporary state for user choices
+    database.orderBuilder = {}
+
+    // broadcast a notification that  a permenant state change has been made
+
+document.dispatchEvent(new CustomEvent("stateChanged"))
+
 }
